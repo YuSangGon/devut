@@ -1,3 +1,3 @@
 .DS_Store
 .idea
-./devut/src/main/resources/application.yml
+/devut/src/main/resources/application.yml
