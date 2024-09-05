@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
@@ -13,7 +12,7 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Main />} />
-          <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/portfolio/:userId" element={<Portfolio />} />
         </Routes>
         <Footer />
       </BrowserRouter>
