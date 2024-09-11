@@ -1,0 +1,103 @@
+.portfolio {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+
+  .portfolioContent {
+    flex: 1 1 100%;
+    border-radius: 20px;
+    border: 1px solid black;
+
+    &.editOn {
+      flex: 1 1 70%;
+    }
+  }
+
+  .editDiv {
+    flex: 1 1 25%;
+    height: inherit;
+    border: 1px solid black;
+    border-radius: 20px;
+
+    .editHeader {
+      padding: 5px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .editContent {
+      padding: 5px 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+
+      .projectItem {
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 5px 5px;
+        position: relative;
+
+        .projectTitle {
+          font-size: 15px;
+          font-weight: bold;
+          margin-bottom: 5px;
+        }
+
+        .projectEdit {
+          float: right;
+        }
+      }
+    }
+  }
+}
+
+.project {
+  height: 250px;
+  display: flex;
+}
+
+.project .projectHeader {
+  flex: 1 1 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid black;
+  box-sizing: border-box;
+  position: relative;
+
+  p {
+    font-size: 20px;
+  }
+}
+
+.project .projectContent {
+  flex: 1 1 75%;
+  position: relative;
+
+  .editProject {
+    text-align: right;
+    padding: 5px 10px 0 0;
+    & * {
+      cursor: pointer;
+    }
+  }
+
+  .projectList {
+    padding: 5px 10px;
+
+    .projectItem {
+      border: 1px solid black;
+      border-radius: 5px;
+      padding: 5px 10px;
+
+      .projectTitle {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+    }
+  }
+}
