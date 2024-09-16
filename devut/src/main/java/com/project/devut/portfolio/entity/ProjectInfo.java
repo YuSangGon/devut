@@ -48,4 +48,5 @@ public class ProjectInfo {
     @Column(name = "USED_YN")
     @ColumnDefault(value = "true")
     private Boolean usedYn;
+
 }

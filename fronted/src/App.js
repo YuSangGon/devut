@@ -6,10 +6,17 @@ import Footer from "./components/footer/Footer";
 
 // import for fontAwsome
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPenToSquare,
+  faPlus,
+  faReply,
+  faShare,
+  faTrash,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import Router from "./components/Router";
 
-library.add(faPenToSquare);
+library.add(faPenToSquare, faTrash, faXmark, faPlus, faReply, faShare);
 
 function App() {
   return (
