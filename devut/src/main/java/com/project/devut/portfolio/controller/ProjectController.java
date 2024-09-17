@@ -24,7 +24,11 @@ public class ProjectController {
 
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody ProjectDto dto) {
-        projectInfoRepo.saveAll(dto.getProjectList());
+        List<ProjectInfo> saveList = dto.getProjectList().stream()
+                .filter(project -> !dto.getDelList().contains(project.getId()))
+                .toList();
+        projectInfoRepo.saveAll(saveList);
+        projectInfoRepo.deleteAllById(dto.getDelList());
         return ResponseEntity.ok(1);
     }
 

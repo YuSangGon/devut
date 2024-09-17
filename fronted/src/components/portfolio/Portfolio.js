@@ -7,6 +7,7 @@ import cloneDeep from "lodash/cloneDeep";
 import { Button } from "react-bootstrap";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ProjectModal from "./ProjectModal";
 
 const Portfolio = () => {
   // projectList 가 변경된 이력을 localStorage에서 가져오기 없으면 빈 배열
@@ -31,6 +32,7 @@ const Portfolio = () => {
   }, [projectIdx]);
 
   const [projectList, setProjectList] = useState([]);
+  const [addProject, setAddProject] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,11 +89,18 @@ const Portfolio = () => {
   };
 
   const save = async () => {
+    const delList = [];
+    projectHist[0].forEach((origin) => {
+      const result = projectList.find((project) => project.id === origin.id);
+      if (result === undefined) delList.push(origin.id);
+    });
+
     const resp = await axios.post(
       "http://localhost:8080/api/portfolio/project/save",
       {
         projectTemplateId: 1,
         projectList: projectList,
+        delList: delList,
       }
     );
     const result = resp.data;
@@ -113,6 +122,11 @@ const Portfolio = () => {
   const oneStepAfter = () => {
     if (projectIdx === projectHist.length - 1) return;
     setProjectIdx((projectIdx) => projectIdx + 1);
+  };
+
+  const saveProject = (e) => {
+    chgProject(e);
+    setAddProject(false);
   };
 
   return (
@@ -167,11 +181,13 @@ const Portfolio = () => {
                                 )}
                               </Draggable>
                             ))}
-
-                          <div className="addProject">
-                            <div className="addIcon">
-                              <FontAwesomeIcon icon="plus" />
-                            </div>
+                        </div>
+                        <div className="addProject">
+                          <div
+                            className="addIcon"
+                            onClick={() => setAddProject(true)}
+                          >
+                            <FontAwesomeIcon icon="plus" />
                           </div>
                         </div>
                       </div>
@@ -184,6 +200,14 @@ const Portfolio = () => {
           </div>
         </div>
       </DragDropContext>
+      {projectList !== undefined && (
+        <ProjectModal
+          isOpen={addProject}
+          onClose={() => setAddProject(false)}
+          saveProject={saveProject}
+          order={projectList.length + 1}
+        />
+      )}
     </>
   );
 };

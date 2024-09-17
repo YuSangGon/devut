@@ -5,17 +5,27 @@ import Modal from "react-modal";
 import cloneDeep from "lodash/cloneDeep";
 
 const ProjectModal = (props) => {
-  const { data, isOpen, onClose, saveProject } = props;
+  const { data, isOpen, onClose, saveProject, order } = props;
 
   const [modalOpen, setModalOpen] = useState(isOpen);
-  const [project, setProject] = useState({});
+  const [project, setProject] = useState({
+    projectTitle: "",
+    projectDescription: "",
+    projectStartedAt: "2024-10-24",
+    projectEndedAt: "2024-12-25",
+    usedYn: true,
+    uploadOrder: order,
+    languages: "HTML, CSS, JAVASCRIPT",
+    projectLink: "https://www.naver.com",
+    projectTemplateId: 1,
+  });
 
   useEffect(() => {
     setModalOpen(isOpen);
   }, [isOpen]);
 
   useEffect(() => {
-    setProject(cloneDeep(data));
+    data && setProject(cloneDeep(data));
   }, [data]);
 
   const changeValue = (e) => {
@@ -33,7 +43,7 @@ const ProjectModal = (props) => {
     >
       <div className="modalContent">
         <div className="modalHeader">
-          <div className="title">수정</div>
+          <div className="title">{data ? "수정" : "추가"}</div>
           <div className="closeBtn">
             <FontAwesomeIcon icon="xmark" onClick={onClose} />
           </div>

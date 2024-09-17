@@ -91,9 +91,9 @@
 .project .projectContent {
   flex: 1 1 75%;
   position: relative;
+  padding: 15px;
 
   .projectList {
-    padding: 15px;
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -121,27 +121,27 @@
         }
       }
     }
+  }
 
-    .addProject {
-      border: 1px dotted #717070;
-      width: 100%;
-      border-radius: 5px;
-      height: 50px;
-      font-size: 20px;
-      font-weight: 800;
-      color: #717070;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+  .addProject {
+    border: 1px dotted #717070;
+    border-radius: 5px;
+    height: 50px;
+    font-size: 20px;
+    font-weight: 800;
+    color: #717070;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
 
-      &:hover {
-        border: 1px dotted black;
-        color: black;
-      }
+    &:hover {
+      border: 1px dotted black;
+      color: black;
+    }
 
-      .addIcon {
-        cursor: pointer;
-      }
+    .addIcon {
+      cursor: pointer;
     }
   }
 }

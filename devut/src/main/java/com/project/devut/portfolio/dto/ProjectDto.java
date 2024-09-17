@@ -9,4 +9,5 @@ import java.util.List;
 public class ProjectDto {
     private Long projectTemplateId;
     private List<ProjectInfo> projectList;
+    private List<Long> delList;
 }
