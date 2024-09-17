@@ -33,6 +33,7 @@ const Portfolio = () => {
 
   const [projectList, setProjectList] = useState([]);
   const [addProject, setAddProject] = useState(false);
+  const addProjectBtn = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,6 +79,11 @@ const Portfolio = () => {
     items.map((item, idx) => (item.uploadOrder = idx + 1));
     addProjectHist(items);
     setProjectList(items);
+    addProjectBtn.current.style.display = "flex";
+  };
+
+  const onDragStart = () => {
+    addProjectBtn.current.style.display = "none";
   };
 
   // ProjectItem 이 변경되었을 떄 호출되는 함수.
@@ -142,7 +148,7 @@ const Portfolio = () => {
         <Button onClick={save}>저장</Button>
         <Button onClick={backToOrigin}>되돌리기</Button>
       </div>
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <div className="portfolio">
           <div className="portfolioContent">
             <Profile />
@@ -182,7 +188,7 @@ const Portfolio = () => {
                               </Draggable>
                             ))}
                         </div>
-                        <div className="addProject">
+                        <div className="addProject" ref={addProjectBtn}>
                           <div
                             className="addIcon"
                             onClick={() => setAddProject(true)}
