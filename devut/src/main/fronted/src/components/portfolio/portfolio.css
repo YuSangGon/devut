@@ -168,9 +168,7 @@
 }
 
 .modalContent {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  position: relative;
   height: 100%;
 
   .modalHeader {
@@ -190,9 +188,62 @@
   .modalBody {
     height: 420px;
     overflow: auto;
+
+    &.compareModal {
+      height: auto;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+
+      h4 {
+        text-align: center;
+        margin: 0;
+      }
+
+      .prev,
+      .cur {
+        width: 45%;
+      }
+
+      .arrowIcon {
+        width: 8%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+      }
+
+      .prev > div,
+      .cur > div {
+        height: 600px;
+        border: 1px solid black;
+        border-radius: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
+
+        & > .red {
+          border-radius: 10px;
+          border: 1px solid red;
+        }
+
+        & > .black {
+          border-radius: 10px;
+          border: 1px solid black;
+        }
+
+        & > .blue {
+          border-radius: 10px;
+          border: 1px solid blue;
+        }
+      }
+    }
   }
 
   .modalFooter {
+    position: absolute;
+    bottom: 0;
+    right: 0;
     display: flex;
     justify-content: end;
     height: 30px;

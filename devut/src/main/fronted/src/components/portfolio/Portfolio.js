@@ -8,63 +8,51 @@ import { Button } from "react-bootstrap";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ProjectModal from "./ProjectModal";
+import CompareModal from "./CompareModal";
+import SettingModal from "./SettingModal";
 
 const Portfolio = () => {
-  // projectList 가 변경된 이력을 localStorage에서 가져오기 없으면 빈 배열
-  const [projectHist, setProjectHist] = useState(() => {
-    const saved = localStorage.getItem("projectHist");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // 현재 변경된 이력의 어느 위치에 있는지에 대한 값 가져오기
-  const [projectIdx, setProjectIdx] = useState(() => {
-    const saved = localStorage.getItem("projectIdx");
-    return saved ? JSON.parse(saved) : 0;
-  });
-
-  useEffect(() => {
-    localStorage.setItem("projectHist", JSON.stringify(projectHist));
-  }, [projectHist]);
-
-  useEffect(() => {
-    localStorage.setItem("projectIdx", JSON.stringify(projectIdx));
-    setProjectList(projectHist[projectIdx]);
-  }, [projectIdx]);
-
   const [projectList, setProjectList] = useState([]);
+  const [originList, setOriginList] = useState([]);
   const [addProject, setAddProject] = useState(false);
+  const [compareModalOpen, setCompareModalOpen] = useState(false);
+  const [settingModalOpen, setSettingModalOpen] = useState(false);
+  const [goBack, setGoBack] = useState(false);
   const addProjectBtn = useRef(null);
+  const [setting, setSetting] = useState({});
+  const portfolioDom = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (projectHist.length === 0) {
-        const resp = await axios.get(
-          "http://localhost:8080/api/portfolio/project/list/1"
-        );
-        const data = resp.data;
-        console.log(data);
-        setProjectHist([data]);
-        setProjectList(cloneDeep(data));
-      } else {
-        setProjectList(projectHist[projectIdx]);
-      }
+      const res = await axios.get("/api/portfolio/1");
+      const data = res.data;
+      setSetting(cloneDeep(data));
+      setProjectList(cloneDeep(data.projectInfoList));
+      setOriginList(cloneDeep(data.projectInfoList));
+      initStyle(data);
     };
     fetchData();
   }, []);
 
-  // 되돌리기시 이력도 전부 날려버림
-  const backToOrigin = () => {
-    setProjectList(cloneDeep(projectHist[0]));
-    setProjectHist([...cloneDeep(projectHist.slice(0, 1))]);
-    setProjectIdx(0);
+  // 초기 스타일
+  const initStyle = (data) => {
+    portfolioDom.current.querySelector(".projectHeader").style.backgroundColor =
+      data.headerBackgroundColor;
+    portfolioDom.current.querySelector(".projectHeader").style.color =
+      data.headerColor;
   };
 
-  const addProjectHist = (newList) => {
-    setProjectHist([
-      ...cloneDeep(projectHist.slice(0, projectIdx + 1)),
-      newList,
-    ]);
-    setProjectIdx((projectIdx) => projectIdx + 1);
+  const saveStyle = (data) => {
+    setSetting(cloneDeep(data));
+    initStyle(data);
+    setSettingModalOpen(false);
+  };
+
+  // 되돌리기시 이력도 전부 날려버림
+  const backToOrigin = () => {
+    // setProjectList(cloneDeep(originList));
+    // setCompareModalOpen(true);
+    // setGoBack(true);
   };
 
   // 드래그가 종료될 때 호출되는 이벤트
@@ -77,7 +65,6 @@ const Portfolio = () => {
 
     // 위치가 변경됨에 따라 uploadOrder 값 세팅
     items.map((item, idx) => (item.uploadOrder = idx + 1));
-    addProjectHist(items);
     setProjectList(items);
     addProjectBtn.current.style.display = "flex";
   };
@@ -90,44 +77,18 @@ const Portfolio = () => {
   const chgProject = (project) => {
     const items = cloneDeep(projectList);
     items.splice(project.uploadOrder - 1, 1, project);
-    addProjectHist(items);
     setProjectList(items);
   };
 
   const save = async () => {
-    const delList = [];
-    projectHist[0].forEach((origin) => {
-      const result = projectList.find((project) => project.id === origin.id);
-      if (result === undefined) delList.push(origin.id);
-    });
-
-    const resp = await axios.post(
-      "http://localhost:8080/api/portfolio/project/save",
-      {
-        projectTemplateId: 1,
-        projectList: projectList,
-        delList: delList,
-      }
-    );
-    const result = resp.data;
+    await axios.post("/api/portfolio/1/save", setting);
   };
 
   const deleteProject = (project) => {
     const items = cloneDeep(projectList);
     items.splice(project.uploadOrder - 1, 1);
     items.map((item, idx) => (item.uploadOrder = idx + 1));
-    addProjectHist(items);
     setProjectList(items);
-  };
-
-  const oneStepBefore = () => {
-    if (projectIdx === 0) return;
-    setProjectIdx((projectIdx) => projectIdx - 1);
-  };
-
-  const oneStepAfter = () => {
-    if (projectIdx === projectHist.length - 1) return;
-    setProjectIdx((projectIdx) => projectIdx + 1);
   };
 
   const saveProject = (e) => {
@@ -138,18 +99,14 @@ const Portfolio = () => {
   return (
     <>
       <div className="portfolioHeader">
-        <Button>
-          <FontAwesomeIcon icon="reply" onClick={oneStepBefore} />
-        </Button>
-        <Button>
-          <FontAwesomeIcon icon="share" onClick={oneStepAfter} />
-        </Button>
+        <Button onClick={() => setSettingModalOpen(true)}>설정</Button>
         <Button>미리보기</Button>
+        <Button>임시저장</Button>
         <Button onClick={save}>저장</Button>
         <Button onClick={backToOrigin}>되돌리기</Button>
       </div>
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-        <div className="portfolio">
+        <div className="portfolio" ref={portfolioDom}>
           <div className="portfolioContent">
             <Profile />
             <Droppable droppableId="project">
@@ -212,6 +169,28 @@ const Portfolio = () => {
           onClose={() => setAddProject(false)}
           saveProject={saveProject}
           order={projectList.length + 1}
+        />
+      )}
+      {projectList && originList && (
+        <CompareModal
+          prevData={{
+            project: originList,
+          }}
+          curData={{
+            project: projectList,
+          }}
+          isOpen={compareModalOpen}
+          isBack={goBack}
+          onClose={() => setCompareModalOpen(false)}
+          save={save}
+        />
+      )}
+      {settingModalOpen && (
+        <SettingModal
+          isOpen={settingModalOpen}
+          onClose={() => setSettingModalOpen(false)}
+          data={setting}
+          saveStyle={saveStyle}
         />
       )}
     </>

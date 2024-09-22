@@ -21,8 +21,8 @@ public class ProjectInfo {
     @Column(name = "PROJECT_INFO_ID")
     private Long id;
 
-    @Column(name = "PROJECT_TEMPLATE_ID", nullable = false)
-    private Long projectTemplateId;
+    @Column(name = "PORTFOLIO_ID", nullable = false)
+    private Long portfolioId;
 
     @Column(name = "PROJECT_TITLE")
     private String projectTitle;

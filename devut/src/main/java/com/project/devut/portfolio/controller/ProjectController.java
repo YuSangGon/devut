@@ -12,14 +12,14 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/portfolio/project")
+@RequestMapping("/api/project")
 public class ProjectController {
 
     private final ProjectInfoRepo projectInfoRepo;
 
-    @GetMapping("/list/{projectTemplateId}")
-    public ResponseEntity<?> list(@PathVariable Long projectTemplateId) {
-        return ResponseEntity.ok(projectInfoRepo.findAllByProjectTemplateId(projectTemplateId));
+    @GetMapping("/list/{portfolioId}")
+    public ResponseEntity<?> list(@PathVariable Long portfolioId) {
+        return ResponseEntity.ok(projectInfoRepo.findAllByPortfolioId(portfolioId));
     }
 
     @PostMapping("/save")

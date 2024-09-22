@@ -8,13 +8,13 @@ const ProjectModal = (props) => {
   const { data, isOpen, onClose, saveProject, order } = props;
 
   const [modalOpen, setModalOpen] = useState(isOpen);
+  const [projectOrder, setProjectOrder] = useState(-1);
   const [project, setProject] = useState({
     projectTitle: "",
     projectDescription: "",
     projectStartedAt: "2024-10-24",
     projectEndedAt: "2024-12-25",
     usedYn: true,
-    uploadOrder: order,
     languages: "HTML, CSS, JAVASCRIPT",
     projectLink: "https://www.naver.com",
     projectTemplateId: 1,
@@ -22,7 +22,8 @@ const ProjectModal = (props) => {
 
   useEffect(() => {
     setModalOpen(isOpen);
-  }, [isOpen]);
+    setProjectOrder(order);
+  }, [isOpen, order]);
 
   useEffect(() => {
     data && setProject(cloneDeep(data));
@@ -67,9 +68,17 @@ const ProjectModal = (props) => {
               onChange={changeValue}
             />
           </div>
+          <div>순서 :{order}</div>
         </div>
         <div className="modalFooter">
-          <Button onClick={() => saveProject(project)}>저장</Button>
+          <Button
+            onClick={() => {
+              project.uploadOrder = projectOrder;
+              saveProject(project);
+            }}
+          >
+            저장
+          </Button>
           <Button onClick={onClose}>닫기</Button>
         </div>
       </div>
